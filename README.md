@@ -1,47 +1,120 @@
 # EcommerceAnalytics
 
-Projet d'analyse e-commerce distribué avec Scala, SBT et Apache Spark. Les fichiers
-fournis sont conservés dans `data/`; leurs chemins et les paramètres de validation
-sont configurés dans `src/main/resources/application.conf`.
+Projet d’analyse e-commerce distribué avec Scala, SBT et Apache Spark.
 
-## Prérequis
+Le projet charge des données transactionnelles, valide leur qualité, enrichit les
+référentiels clients / produits / marchands, applique les transformations métier,
+calcule des KPI et produit des résultats structurés au format CSV et Parquet.
+
+## 1. Prérequis
 
 - Java 17
 - Scala 2.12.18
 - SBT 1.10.7
-- Spark 3.5.5 pour lancer l'application avec `spark-submit`
+- Spark 3.5.5
+- Git
 
-Les dépendances Spark sont en portée `Provided` : elles sont nécessaires à la
-compilation, mais le cluster Spark les fournit à l'exécution.
+Les dépendances Spark sont en portée `Provided`, ce qui permet de compiler le code
+sans embarquer le runtime Spark dans le JAR final. Le runtime est fourni au moment
+de l’exécution par `spark-submit` ou par le cluster.
 
-## Compilation et JAR
+## 2. Installation
 
-À la racine de ce projet :
+### Linux / macOS
+
+```sh
+java -version
+scala -version
+sbt --version
+```
+
+### Windows
+
+Installer Java 17, Scala et SBT, puis vérifier les variables d’environnement.
+Pour l’exécution locale de Spark sur Windows, il est souvent nécessaire de configurer
+`HADOOP_HOME` et d’ajouter `winutils.exe` dans le chemin, car Spark utilise des
+bibliothèques Hadoop natives pour l’accès aux fichiers locaux.
+
+Exemple de variables à configurer :
+
+```powershell
+$env:HADOOP_HOME = "C:\hadoop\winutils"
+$env:PATH += ";$env:HADOOP_HOME\bin"
+```
+
+## 3. Structure du projet
+
+```text
+data_groupe3/
+├── build.sbt
+├── project/
+├── src/
+│   ├── main/
+│   │   ├── resources/application.conf
+│   │   └── scala/com/ecommerce/
+│   └── test/scala/com/ecommerce/
+├── data/
+│   ├── transactions.csv
+│   ├── users.json
+│   ├── products.parquet
+│   └── merchants.csv
+├── output/
+├── README.md
+├── CONTRIBUTIONS.md
+└── EQUIPE.md
+```
+
+## 4. Compilation et tests
+
+À la racine du projet :
 
 ```sh
 sbt clean compile
 sbt test
+```
+
+Pour produire un JAR exécutable :
+
+```sh
 sbt assembly
 ```
 
-Le JAR `target/scala-2.12/ecommerce-analytics-assembly.jar` contient l'application
-et ses dépendances non-Spark. Spark reste en portée `Provided` et est fourni par
-`spark-submit`. Le point d’entrée est `com.ecommerce.analytics.MainApp`.
+Le JAR créé est :
 
-## Exécution locale
+```text
+target/scala-2.12/ecommerce-analytics-assembly.jar
+```
 
-Lancement local avec SBT :
+## 5. Exécution locale
+
+Lancement via SBT :
 
 ```sh
 sbt "run"
 ```
 
+Le pipeline accepte une étape en argument :
+
+- `ingestion`
+- `transformation`
+- `analytics`
+- `all` (valeur par défaut)
+
+Exemples :
+
+```sh
+sbt "run ingestion"
+sbt "run transformation"
+sbt "run analytics"
+sbt "run all"
+```
+
 Le mode Spark local par défaut est `local[*]`; il peut être modifié dans
-`application.conf`.
+`src/main/resources/application.conf`.
 
-## Déploiement Spark
+## 6. Déploiement Spark
 
-Après création du JAR avec `sbt assembly` :
+Après `sbt assembly`, il est possible d’exécuter le JAR avec `spark-submit` :
 
 ```sh
 spark-submit \
@@ -50,42 +123,80 @@ spark-submit \
   target/scala-2.12/ecommerce-analytics-assembly.jar
 ```
 
-Remplacez `local[*]` par la cible du cluster pour un déploiement distribué.
+Pour un cluster distribué, remplacer `local[*]` par la cible du cluster.
 
-## Fichiers de données et rapport qualité
+## 7. Données et qualité des données
 
-Les entrées attendues sont `data/transactions.csv`, `data/users.json`,
-`data/products.parquet` et `data/merchants.csv`. Le rapport qualité est écrit en
-CSV sous `output/data_quality_report/` (un répertoire Spark contenant les parties
-CSV et le marqueur de succès).
+Les fichiers de données attendus sont :
 
-Les méthodes d'ingestion, de validation et de génération du rapport se trouvent
-dans `com.ecommerce.analytics`. Les lignes rejetées restent disponibles avec la
-colonne `rejection_reason`.
+- `data/transactions.csv`
+- `data/users.json`
+- `data/products.parquet`
+- `data/merchants.csv`
 
-## Configuration
+Le projet applique des règles de validation sur les colonnes métier, garde les
+lignes rejetées avec une raison de rejet (`rejection_reason`) et génère un rapport
+qualité exploitable.
 
-Les chemins de données, seuils de validation, paramètres Spark et options
-d'optimisation se trouvent dans `src/main/resources/application.conf`. Des valeurs
-de repli sont également définies dans `AppConfig` afin de permettre le chargement
-si une clé manque.
+Le rapport de qualité est écrit dans :
 
-## Équipe et attribution
+```text
+output/data_quality_report/
+```
 
-Le projet est réalisé par trois membres : Mamadou Niang (membre A : structure,
-build, modèles, ingestion, validation, rapport qualité et configuration),
-Moussa Abdou Omar (membre B : transformations et fenêtres) et Aicha Ly
-(membre C : analytique, optimisations Spark et application principale).
-Le détail des rôles, des coordonnées et des noms Git figure dans `EQUIPE.md`.
+## 8. Configuration
 
-## Étapes du pipeline et résultats
+Les paramètres de configuration sont centralisés dans :
 
-L'application accepte une étape en argument : `ingestion`, `transformation`,
-`analytics` ou `all` (par défaut). Un argument inconnu affiche l'aide.
-Exemple : `sbt "run transformation"`.
+```text
+src/main/resources/application.conf
+```
 
-Les résultats sont écrits dans `output/csv/` et `output/parquet/` :
-`merchant_report`, `cohort_retention`, `cohort_revenue` et
-`cohort_best_3_months`. Le rapport de qualité est dans
-`output/data_quality_report/`. Le cache et le broadcast se désactivent dans
-`application.conf` (`enable-cache`, `enable-broadcast`).
+On y retrouve :
+
+- chemins des fichiers d’entrée / sortie,
+- seuils de validation,
+- master Spark,
+- nombres de partitions,
+- activation du cache et du broadcast.
+
+Des valeurs de repli sont aussi définies dans `AppConfig` pour sécuriser le
+chargement si une clé manque.
+
+## 9. Sorties du pipeline
+
+Les résultats sont écrits dans :
+
+- `output/csv/`
+- `output/parquet/`
+
+Fichiers principaux générés :
+
+- `merchant_report`
+- `cohort_retention`
+- `cohort_revenue`
+- `cohort_best_3_months`
+
+Le rapport de qualité est généré dans `output/data_quality_report/`.
+
+## 10. Équipe et attribution
+
+Le projet est réalisé par trois membres :
+
+- Mamadou Niang : structure, build, modèles, ingestion, validation, rapport qualité
+  et configuration.
+- Moussa Abdou Omar : transformations, fenêtrage temporel, détection des
+  transactions suspectes.
+- Aicha Ly : analytics, cohortes, optimisation Spark et application principale.
+
+Le détail complet des rôles et contributions est disponible dans `CONTRIBUTIONS.md`
+ainsi que dans `EQUIPE.md`.
+
+## 11. Points de vigilance
+
+- Sur Windows, l’exécution locale Spark peut échouer si `HADOOP_HOME` et `winutils`
+  ne sont pas correctement configurés.
+- Le cache et le broadcast peuvent être désactivés via `application.conf` avec les
+  paramètres `enable-cache` et `enable-broadcast`.
+- Les dépendances Spark restent en `Provided` pour un packaging propre et un
+  déploiement compatible `spark-submit`.
