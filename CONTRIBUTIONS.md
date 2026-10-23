@@ -3,13 +3,26 @@
 ## Membre A — Mamadou Niang
 
 - Propriétaire des Parties 1, 2 et 7 : structure SBT et configuration du build,
-  modèles, ingestion multi-format, validations, rapport de qualité et configuration
-  externalisée.
+  modèles de données, ingestion multi-format, validations métier, rapport de qualité
+  et configuration externalisée.
+- Responsable de la base du projet : organisation du build Scala/Spark, définition
+  des modèles de domaine, gestion des paramètres externes et mise en place des
+  chemins de données via configuration centralisée.
+- Chargé de l’ingestion des fichiers de données (formats variés, normalisation des
+  schémas, contrôle des entrées et préparation du jeu de données pour les étapes
+  suivantes).
+- Contributeur majeur au mécanisme de validation : règles de cohérence, détection des
+  valeurs invalides, gestion des erreurs par ligne et production d’un rapport de
+  qualité exploitable par les autres membres.
 - Le JAR est produit avec `sbt assembly` et destiné à `spark-submit`. Spark est
-  une dépendance `Provided` afin de ne pas embarquer le runtime Spark dans le JAR
-  de l'application.
-- Historique Git : à compléter au fur et à mesure des commits effectués par Mamadou
-  Niang dans le dépôt de groupe.
+  maintenu en dépendance `Provided` afin de ne pas embarquer le runtime Spark dans
+  le artefact final de l’application.
+- Contribution clé à la structure du projet : définition des conventions de code,
+  alignement des modules Scala, configuration du packaging et préparation du pipeline
+  de lancement en environnement Spark.
+- Historique Git : suivi dans le dépôt de groupe; les commits de Mamadou Niang
+  doivent être consolidés dans le journal final du projet afin d’indiquer la
+  chronologie exacte des livraisons et des corrections apportées.
 
 ## Membre B — Moussa Abdou Omar
 
