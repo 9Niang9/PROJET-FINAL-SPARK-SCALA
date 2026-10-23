@@ -14,6 +14,7 @@ final class AppConfig private (private val config: Config) {
   def productsPath: String = config.getString("app.data.input.products")
   def merchantsPath: String = config.getString("app.data.input.merchants")
   def qualityReportPath: String = config.getString("app.data.output.quality-report")
+  def outputPath: String = config.getString("app.data.output.path")
 
   def transactionMinAmountExclusive: Double =
     config.getDouble("app.validation.transaction.min-amount-exclusive")
@@ -46,7 +47,7 @@ object AppConfig {
           products = "data/products.parquet"
           merchants = "data/merchants.csv"
         }
-        output { quality-report = "output/data_quality_report" }
+        output { quality-report = "output/data_quality_report", path = "output/" }
       }
       validation {
         transaction { min-amount-exclusive = 0.0, timestamp-length = 14 }
