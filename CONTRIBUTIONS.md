@@ -116,5 +116,25 @@
 
 ### Relectures
 
-- Relecture de la Partie 4 par Moussa Abdou Omar : à faire.
-- Relecture de la Partie 5 par Mamadou Niang et Moussa Abdou Omar : à faire.
+- Relecture des Parties 1 et 7 (structure SBT, build.sbt, README, application.conf,
+  AppConfig), le 23 octobre 2026, par Aicha Ly. `sbt clean compile` et `sbt test`
+  passent sur mon poste (Java 21, sbt 1.10.7).
+- Points validés : versions de Scala (2.12.18) et de Spark (3.5.5) compatibles,
+    Spark en portée `Provided`, Typesafe Config intégré, plugin `sbt-assembly`
+    avec une stratégie de fusion, case classes dans `com.ecommerce.models`,
+    `.gitignore` conforme (`target/`, `project/target/`, `.idea/`), justification
+    du choix de l'assembly dans `CONTRIBUTIONS.md`, aucun chemin ni seuil codé en
+    dur, valeurs de repli dans `AppConfig`.
+- Remarque 1 : la ligne `Compile / run / fullClasspath` du `build.sbt` n'avait
+    pas d'effet, et `sbt run` échouait car Spark est en `Provided`. Corrigé dans le
+    commit « Corrige sbt run pour les dépendances Spark en Provided ».
+- Remarque 2 : les données sont dans `data/` à la racine du projet, alors que le
+    sujet les place dans `src/main/resources/data/`. Le projet fonctionne, car
+    `application.conf` pointe vers `data/...`, mais l'arborescence diffère du sujet.
+- Remarque 3 : le README indique les versions requises, mais pas comment installer
+    Scala, Spark et SBT, alors que la Question 1.3 le demande.
+- Remarque 4 : les valeurs par défaut sont dupliquées entre `application.conf`
+    et `AppConfig` : une modification doit être faite aux deux endroits.
+- Remarque 5 : le dossier `utils/` ne contenait pas de `SparkSessionBuilder`,
+    cité dans le sujet. Il est ajouté par le membre C : Aicha. `AppConfig` joue le rôle
+    du `ConfigLoader`.
