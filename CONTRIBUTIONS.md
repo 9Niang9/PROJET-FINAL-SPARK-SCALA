@@ -1,5 +1,7 @@
 # Contributions
 
+Document synchronisé avec la version actuelle du projet et le README du dépôt.
+
 ## Membre A — Mamadou Niang
 
 - Propriétaire des Parties 1, 2 et 7 : structure SBT et configuration du build,
@@ -20,9 +22,9 @@
 - Contribution clé à la structure du projet : définition des conventions de code,
   alignement des modules Scala, configuration du packaging et préparation du pipeline
   de lancement en environnement Spark.
-- Historique Git : suivi dans le dépôt de groupe; les commits de Mamadou Niang
-  doivent être consolidés dans le journal final du projet afin d’indiquer la
-  chronologie exacte des livraisons et des corrections apportées.
+- Historique Git : les commits de Mamadou Niang sont enregistrés dans le dépôt de
+  groupe; la chronologie exacte des livraisons et des corrections doit être
+  vérifiée dans le journal Git final du projet.
 
 ## Membre B — Moussa Abdou Omar
 
@@ -31,7 +33,8 @@
 - Fichiers : `TimeFeatures.scala`, `DataTransformation.scala`,
   `TransformationApp.scala` et leurs tests (`TimeFeaturesSpec`,
   `DataTransformationSpec`).
-- Historique Git : 5 commits sur le dépôt de groupe, un par fichier livré.
+- Historique Git : suivi dans le dépôt de groupe; la liste exacte des commits de
+  Moussa Abdou Omar doit être vérifiée dans le journal Git final du projet.
 
 ### Décisions techniques
 
@@ -112,8 +115,10 @@
   `SparkSessionBuilder.scala`, `StepTimer.scala`, `ResultsWriter.scala`.
 - Bonus traités : taux de transactions suspectes par marchand (4.1), revenu par
   cohorte et par utilisateur (4.2), exécution par étape (6.2).
-- Historique Git : 5 commits sur le dépôt de groupe.
-- Charge de travail : plus de 8 heures.
+- Historique Git : suivi dans le dépôt de groupe; la liste exacte des commits de
+  Aicha Ly doit être vérifiée dans le journal Git final du projet.
+- Charge de travail : plus de 8 heures, avec contributions sur l’analytics,
+  l’optimisation Spark et l’application principale.
 
 ### Décisions techniques
 
