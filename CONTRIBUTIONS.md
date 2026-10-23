@@ -76,5 +76,45 @@
 - Relecture de la Partie 4 (KPI marchands, cohortes) : à faire quand le lot C
   sera disponible dans le dépôt.
 
-Les contributions du membre C sont à consigner par son auteur lors de
-l'intégration de son lot.
+## Membre C — Aicha Ly
+
+- Propriétaire des Parties 4, 5 et 6 : KPI marchands, cohortes, optimisations
+  Spark et application principale.
+- Fichiers : `Analytics.scala`, `SparkOptimizations.scala`, `MainApp.scala`,
+  `SparkSessionBuilder.scala`, `StepTimer.scala`, `ResultsWriter.scala`.
+- Bonus traités : taux de transactions suspectes par marchand (4.1), revenu par
+  cohorte et par utilisateur (4.2), exécution par étape (6.2).
+- Historique Git : 5 commits sur le dépôt de groupe.
+- Charge de travail : plus de 8 heures.
+
+### Décisions techniques
+
+- **Marchands inconnus** : les transactions dont le marchand n'existe pas dans
+  le référentiel sont exclues du rapport marchand, car on ne peut ni les nommer
+  ni les classer.
+- **Commission** : montant multiplié par `commission_rate`. Une commission hors
+  bornes est déjà `null` depuis la Partie 3 et n'est donc pas comptée.
+- **Cohortes** : `cohort_month` est le mois de la première transaction,
+  `period_index` est calculé avec `months_between`, la rétention est exprimée en
+  pourcentage de la taille initiale. En cas d'égalité à 3 mois, la cohorte la
+  plus grande est retenue.
+- **Cache** : `cache()` sur les jeux lus, `persist(MEMORY_AND_DISK_SER)` sur le
+  résultat enrichi, volumineux, et `unpersist()` à la fin dans un bloc `finally`.
+  Le tout se désactive avec `enable-cache`.
+- **Broadcast** : appliqué aux petites tables (marchands, tailles de cohortes,
+  ventes par tranche d'âge), désactivable avec `enable-broadcast`.
+- **Sortie** : chaque résultat est écrit en CSV et en Parquet, en un seul
+  fichier, car les agrégats sont petits.
+- **Arrêt propre** : `MainApp` libère le cache et arrête la SparkSession dans un
+  `finally`, puis renvoie un code de sortie 1 en cas d'erreur.
+
+### Difficultés rencontrées
+
+- `sbt run` s'arrêtait avec `NoClassDefFoundError: SparkSession`, car Spark est
+  en portée `Provided`. Corrigé dans `build.sbt` avec une exécution en processus
+  séparé et les options Java des tests.
+
+### Relectures
+
+- Relecture de la Partie 4 par Moussa Abdou Omar : à faire.
+- Relecture de la Partie 5 par Mamadou Niang et Moussa Abdou Omar : à faire.
