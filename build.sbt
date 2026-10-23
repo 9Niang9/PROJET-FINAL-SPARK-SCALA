@@ -21,7 +21,9 @@ lazy val root = (project in file("."))
       case PathList("META-INF", _ @ _*) => MergeStrategy.discard
       case _ => MergeStrategy.first
     },
-    Compile / run / fullClasspath ++= (Compile / dependencyClasspath).value,
+    Compile / run := Defaults.runTask(Compile / fullClasspath, Compile / run / mainClass, Compile / run / runner).evaluated,
+run / fork := true,
+run / javaOptions ++= (Test / javaOptions).value,
     Test / fork := true,
     Test / javaOptions ++= Seq(
       "--add-exports=java.base/sun.nio.ch=ALL-UNNAMED",
