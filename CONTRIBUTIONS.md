@@ -86,8 +86,23 @@
     disponibles en mémoire.
   - Remarque 5 : les valeurs par défaut sont dupliquées entre `application.conf`
     et `AppConfig`.
-- Relecture de la Partie 4 (KPI marchands, cohortes) : à faire quand le lot C
-  sera disponible dans le dépôt.
+- Relecture de la Partie 4 (KPI marchands, cohortes), le 23 octobre 2026, par
+  Moussa Abdou Omar. Les 12 tests existants passent avec le lot C et
+  `sbt "run all"` s'exécute de bout en bout : 136 157 lignes enrichies (égal aux
+  transactions valides), rapport marchands, matrice de rétention et fichiers
+  CSV et Parquet écrits.
+  - Points validés : exclusion des marchands absents du référentiel, classements
+    par catégorie et par région avec `rank`, commissions calculées sans les valeurs
+    mises à `null`, ventes par tranche d'âge, cohortes construites avec `trunc` et
+    `months_between`, meilleure cohorte à 3 mois, revenu par cohorte.
+  - Remarque 1 : `rank_in_region` est calculé aussi lorsque la région est nulle,
+    ce qui classe ensemble tous les marchands sans région. Un rang nul serait plus
+    cohérent dans ce cas.
+  - Remarque 2 : une cohorte sans utilisateur actif à un mois donné n'a pas de
+    ligne dans la matrice, au lieu d'une rétention de 0 %.
+  - Remarque 3 : aucun test n'a été ajouté pour `Analytics` ni pour `MainApp`.
+  - Remarque 4 : une étape inconnue affiche l'aide mais le programme se termine
+    avec le code 0, ce qui empêche un script de détecter l'erreur.
 
 ## Membre C — Aicha Ly
 
