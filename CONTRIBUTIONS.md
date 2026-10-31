@@ -33,8 +33,7 @@ Document synchronisé avec la version actuelle du projet et le README du dépôt
 - Fichiers : `TimeFeatures.scala`, `DataTransformation.scala`,
   `TransformationApp.scala` et leurs tests (`TimeFeaturesSpec`,
   `DataTransformationSpec`).
-- Historique Git : suivi dans le dépôt de groupe; la liste exacte des commits de
-  Moussa Abdou Omar doit être vérifiée dans le journal Git final du projet.
+- Historique Git : 5 commits de code sur le dépôt de groupe, un par fichier livré.
 
 ### Décisions techniques
 
